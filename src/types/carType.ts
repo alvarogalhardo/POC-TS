@@ -6,3 +6,7 @@ export type Car = {
   price: number;
 };
 
+export type Error = {
+  name: string;
+  message: string;
+};

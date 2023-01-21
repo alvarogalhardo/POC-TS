@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { deleteCarRepo } from "../repositories/deleteCar.js";
+import services from "../services/services.js";
 
 export async function deleteCar(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    await deleteCarRepo(Number(id));
+    await services.deleteCar(id)
     res.sendStatus(200);
     return;
   } catch (err) {
