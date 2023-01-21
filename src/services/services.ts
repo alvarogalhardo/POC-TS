@@ -4,10 +4,17 @@ import { getAllCars, getCarById } from "../repositories/getCars.js";
 import { insertCar } from "../repositories/insertCar.js";
 import { AplicationError } from "../errors/genericError.js";
 import { Car } from "../types/carType.js";
+import { getAVG } from "../repositories/getPrice.js";
 
 async function deleteCar(id: string) {
   try {
-    await deleteCarRepo(id);
+    const exists = await getCar(id);
+    if (exists === null) {
+      return null;
+    }
+    const result = (await deleteCarRepo(id)).rows;
+    console.log(result);
+
     return;
   } catch (err) {
     console.error(err);
@@ -48,9 +55,20 @@ async function postCar(car: Car) {
   }
 }
 
-async function updateCar(id:string,newCar:Car){
-    const { name, brand, color, year, price } = newCar;
-    await updateCarRepo(name, brand, color, year, price, id);
+async function updateCar(id: string, newCar: Car) {
+  const { name, brand, color, year, price } = newCar;
+  await updateCarRepo(name, brand, color, year, price, id);
+}
+
+async function getPrice() {
+  try {
+    const average:Number = (await getAVG()).rows[0].average;
+    const result = Number(average).toFixed(2);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw AplicationError();
+  }
 }
 
 const services = {
@@ -58,7 +76,8 @@ const services = {
   getCars,
   getCar,
   postCar,
-  updateCar
+  updateCar,
+  getPrice,
 };
 
 export default services;
