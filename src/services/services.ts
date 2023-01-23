@@ -13,9 +13,7 @@ async function deleteCar(id: string) {
       return null;
     }
     const result = (await deleteCarRepo(id)).rows;
-    console.log(result);
-
-    return;
+    return true;
   } catch (err) {
     console.error(err);
     throw AplicationError();
@@ -49,6 +47,7 @@ async function postCar(car: Car) {
   const { name, brand, color, year, price } = car;
   try {
     await insertCar(name, brand, color, year, price);
+    return true;
   } catch (err) {
     console.error(err);
     throw AplicationError();
@@ -58,11 +57,12 @@ async function postCar(car: Car) {
 async function updateCar(id: string, newCar: Car) {
   const { name, brand, color, year, price } = newCar;
   await updateCarRepo(name, brand, color, year, price, id);
+  return true;
 }
 
 async function getPrice() {
   try {
-    const average:Number = (await getAVG()).rows[0].average;
+    const average: Number = (await getAVG()).rows[0].average;
     const result = Number(average).toFixed(2);
     return result;
   } catch (err) {

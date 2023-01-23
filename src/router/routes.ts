@@ -13,8 +13,8 @@ router.get("/health", (req: Request, res: Response) => res.sendStatus(200));
 router.post("/cars", validateSchema(carSchema), postCar);
 router.delete("/cars/:id", deleteCar);
 router.get("/cars", getCars);
-router.get("/cars/:id",getCarById)
+router.get("/cars/:id", getCarById);
 router.put("/cars/:id", validateSchema(carSchema), updateCar);
-router.get("/price",getPriceAVG)
+router.get("/price", getPriceAVG);
 
 export default router;
