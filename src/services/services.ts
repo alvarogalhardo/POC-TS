@@ -12,7 +12,7 @@ async function deleteCar(id: string) {
     if (exists === null) {
       return null;
     }
-    const result = (await deleteCarRepo(id)).rows;
+    await deleteCarRepo(id);
     return true;
   } catch (err) {
     console.error(err);
@@ -62,8 +62,8 @@ async function updateCar(id: string, newCar: Car) {
 
 async function getPrice() {
   try {
-    const average: Number = (await getAVG()).rows[0].average;
-    const result = Number(average).toFixed(2);
+    const average: number = (await getAVG()).rows[0].average;
+    const result = (average).toFixed(2);
     return result;
   } catch (err) {
     console.error(err);
