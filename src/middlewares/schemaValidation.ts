@@ -1,7 +1,8 @@
+import { Car } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { ObjectSchema } from "joi";
 
-export function validateSchema(schema: ObjectSchema<any>) {
+export function validateSchema(schema: ObjectSchema<Car>) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body);
     if (error) {

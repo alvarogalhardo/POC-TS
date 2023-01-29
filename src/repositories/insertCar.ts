@@ -1,17 +1,21 @@
-import db from "../database/db.js";
+import { Car } from "@prisma/client";
+import prisma from "../database/db.js";
 
 export async function insertCar(
   name: string,
-  brand: string,
-  color: string,
+  brandId: number,
+  colorId: number,
   year: string,
   price: number
-) {
-  return db.query(
-    `
-        INSERT INTO cars (name,brand,color,year,price)
-        VALUES ($1, $2, $3, $4, $5)
-    `,
-    [name, brand, color, year, price]
-  );
+): Promise<Car> {
+  const posted = await prisma.car.create({
+    data: {
+      name: name,
+      brandId: brandId,
+      year: year,
+      colorId: colorId,
+      price: price,
+    },
+  });
+  return posted;
 }

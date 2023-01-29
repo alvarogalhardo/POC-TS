@@ -1,7 +1,11 @@
-import db from "../database/db.js";
+import { Car } from "@prisma/client";
+import prisma from "../database/db.js";
 
-export async function deleteCarRepo(id: string){
-    return db.query(`
-        DELETE FROM cars WHERE id = $1
-    `,[id])
+export async function deleteCarRepo(id: number): Promise<Car> {
+  const deleted = await prisma.car.delete({
+    where: {
+      id,
+    },
+  });
+  return deleted;
 }

@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
+import { AplicationError } from "../errors/genericError.js";
 import services from "../services/services.js";
 
 export async function deleteCar(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    const deleted = await services.deleteCar(id);
+    const deleted = await services.deleteCar(Number(id));
     if(deleted === null){
       return res.sendStatus(404)
     }
-    res.sendStatus(200);
-    return;
+    return res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
-    return;
+    return res.status(500).send(AplicationError());
   }
 }

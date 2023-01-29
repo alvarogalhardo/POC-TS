@@ -3,10 +3,10 @@ import { updateCarRepo } from "../repositories/updateCar.js";
 import { getAllCars, getCarById } from "../repositories/getCars.js";
 import { insertCar } from "../repositories/insertCar.js";
 import { AplicationError } from "../errors/genericError.js";
-import { Car } from "../types/carType.js";
-import { getAVG } from "../repositories/getPrice.js";
+import { Brand, Car } from "@prisma/client";
+import brandRepository from "../repositories/getBrand.js";
 
-async function deleteCar(id: string) {
+async function deleteCar(id: number): Promise<boolean> {
   try {
     const exists = await getCar(id);
     if (exists === null) {
@@ -20,33 +20,33 @@ async function deleteCar(id: string) {
   }
 }
 
-async function getCars() {
+async function getCars(): Promise<Car[]> {
   try {
-    const { rows } = await getAllCars();
-    return rows;
+    const cars = await getAllCars();
+    return cars;
   } catch (error) {
     console.error(error);
     throw AplicationError();
   }
 }
 
-async function getCar(id: string) {
+async function getCar(id: number): Promise<Car> {
   try {
-    const { rows } = await getCarById(id);
-    if (rows.length === 0) {
+    const car = await getCarById(id);
+    if (!car) {
       return null;
     }
-    return rows[0];
+    return car;
   } catch (err) {
     console.error(err);
     throw AplicationError();
   }
 }
 
-async function postCar(car: Car) {
-  const { name, brand, color, year, price } = car;
+async function postCar(car: Car): Promise<boolean> {
+  const { name, brandId, colorId, year, price } = car;
   try {
-    await insertCar(name, brand, color, year, price);
+    await insertCar(name, brandId, colorId, year, price);
     return true;
   } catch (err) {
     console.error(err);
@@ -54,21 +54,16 @@ async function postCar(car: Car) {
   }
 }
 
-async function updateCar(id: string, newCar: Car) {
-  const { name, brand, color, year, price } = newCar;
-  await updateCarRepo(name, brand, color, year, price, id);
+async function updateCar(id: number, newCar: Car): Promise<boolean> {
+  const { name, brandId, colorId, year, price } = newCar;
+  await updateCarRepo(name, brandId, colorId, year, price, id);
   return true;
 }
 
-async function getPrice() {
-  try {
-    const average: number = (await getAVG()).rows[0].average;
-    const result = (average).toFixed(2);
-    return result;
-  } catch (err) {
-    console.error(err);
-    throw AplicationError();
-  }
+async function getBrandById(id: number): Promise<Brand> {
+  const brand = await brandRepository.getBrand(id);
+  if (!brand) return null;
+  return brand;
 }
 
 const services = {
@@ -77,7 +72,7 @@ const services = {
   getCar,
   postCar,
   updateCar,
-  getPrice,
+  getBrandById,
 };
 
 export default services;

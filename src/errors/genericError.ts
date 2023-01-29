@@ -1,4 +1,4 @@
-import { Error } from "../types/carType.js";
+import { Error } from "../types/error.js";
 
 export function AplicationError(): Error{
     return {
